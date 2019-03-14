@@ -179,6 +179,26 @@ public class CRUD extends JFrame {
 		JButton btnBuscar = new JButton("Buscar");
 		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				try {
+					if(txtCod.getText().equals(""))
+						throw new Exception("Valores inválidos");
+					if(!Clinicas.cadastrado(Integer.parseInt(txtCod.getText())))
+						JOptionPane.showMessageDialog(null, "Não foi possível encontrar encontrar clínica", "Clínica não existente", JOptionPane.WARNING_MESSAGE);
+					else
+					{
+						 Clinica cli = Clinicas.getClinica(Integer.parseInt(txtCod.getText()));
+						 txtCEP.setText(cli.getCEP() + "");
+						 txtComplemento.setText(cli.getComplemento());
+						 txtNome.setText(cli.getNome());
+						 txtNumero.setText(cli.getNumero() + "");
+					}
+						
+					
+				}
+				catch(Exception erro)
+				{
+					erro.getMessage();
+				}
 				
 			}
 		});
