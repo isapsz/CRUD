@@ -324,7 +324,7 @@ public class CRUD extends JFrame {
 	private void exibirEndereco()
 	{
 		Logradouro logradouro = (Logradouro)ClienteWS.getObjeto(Logradouro.class, "http://api.postmon.com.br/v1/cep/" + txtCEP.getText());
-		txtEndereco.setText(logradouro.getLogradouro() + ", " + logradouro.getBairro() + " - " + logradouro.getCidade() + ", " + logradouro.getEstado());
+		txtEndereco.setText(logradouro.getLogradouro()+((logradouro.getComplemento() == null)? "": ", " + logradouro.getComplemento()) +", " + logradouro.getBairro() + " - " + logradouro.getCidade() + ", " + logradouro.getEstado());
 	}
 	
 

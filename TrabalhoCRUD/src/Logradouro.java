@@ -92,11 +92,24 @@ public class Logradouro
 
          this.cep = cep;
     }
+    
+    private String complemento;
+    
+    public String getComplemento()
+    {
+    	return this.complemento;
+    }
+    
+    public void setComplemento(String complemento)
+    {
+    	this.complemento = complemento;
+    }
+    
 
     public Logradouro (String logradouro, String bairro,
                        String cidade, InfoCidade cidade_info,
                        String estado, InfoEstado estado_info,
-                       String cep) throws Exception
+                       String cep, String complemento) throws Exception
     {
         this.setLogradouro  (logradouro);
         this.setBairro      (bairro);
@@ -105,6 +118,7 @@ public class Logradouro
         this.setEstado      (estado);
         this.setEstado_info (estado_info);
         this.setCep         (cep); 
+        this.setComplemento(complemento);
     }
 
     // exigencia do mapeador de JSon
@@ -123,7 +137,7 @@ public class Logradouro
                " / "+
                this.estado_info+
                "\nC.E.P.....: "+
-               this.cep;
+               this.cep + ((this.complemento == null)? "" : "\nComplemento:" + this.complemento);
     }
 
     public boolean equals (Object obj)
@@ -158,6 +172,9 @@ public class Logradouro
 
         if (!this.cep.equals(cep.cep))
             return false;
+        
+        if(!this.complemento.equals(cep.complemento))
+        	return false;
 
         return true;
     }
@@ -172,6 +189,7 @@ public class Logradouro
         ret = 2*ret + this.estado     .hashCode();
         ret = 2*ret + this.estado_info.hashCode();
         ret = 2*ret + this.cep        .hashCode();
+        ret = 2*ret+ this.complemento.hashCode();
 
         return ret;
     }
@@ -187,6 +205,7 @@ public class Logradouro
         this.estado      = modelo.estado;
         this.estado_info = (InfoEstado)modelo.estado_info.clone();
         this.cep         = modelo.cep;
+        this.complemento = modelo.complemento;
     }
 
     public Object clone ()
