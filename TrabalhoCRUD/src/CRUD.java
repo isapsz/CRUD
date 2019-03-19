@@ -58,6 +58,7 @@ public class CRUD extends JFrame {
 	 * Create the frame.
 	 */
 	public CRUD() {
+		setTitle("CRUD");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 510, 308);
 		contentPane = new JPanel();
@@ -135,8 +136,10 @@ public class CRUD extends JFrame {
 			public void focusLost(FocusEvent arg0)  {
 				try
 				{
-					Logradouro logradouro = (Logradouro)ClienteWS.getObjeto(Logradouro.class, "http://api.postmon.com.br/v1/cep/" + txtCEP.getText());
-					txtEndereco.setText(logradouro.getLogradouro() + ", " + logradouro.getBairro() + " - " + logradouro.getCidade() + ", " + logradouro.getEstado());
+					if(!txtCEP.getText().equals(""))
+					{
+						exibirEndereco();
+					}
 				}
 				catch(Exception erro)
 				{
@@ -200,21 +203,33 @@ public class CRUD extends JFrame {
 		gbc_txtEndereco.fill = GridBagConstraints.BOTH;
 		gbc_txtEndereco.gridx = 1;
 		gbc_txtEndereco.gridy = 5;
+		
 		panel_1.add(txtEndereco, gbc_txtEndereco);
+		JButton btnLimparCampos = new JButton("Limpar");
+		btnLimparCampos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				txtCod.setText("");
+				txtNumero.setText("");
+				txtEndereco.setText("");
+				txtNome.setText("");
+				txtCod.setText("");
+				txtCEP.setText("");
+				txtComplemento.setText("");
+			}
+		});
+		panel.add(btnLimparCampos);
 		
 		JButton btnInserir = new JButton("Inserir");
 		btnInserir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					if(txtCod.getText().equals("") || txtNome.getText().equals("") || txtNumero.getText().equals("")||txtCEP.getText().equals(""))
-						throw new Exception("Valores inválidos");
+						JOptionPane.showMessageDialog(null, "Insira todos os dados corretamente", "Dados incompletos",JOptionPane.INFORMATION_MESSAGE);
 					if(Clinicas.cadastrado(Integer.parseInt(txtCod.getText())))
 						JOptionPane.showMessageDialog(null, "Não foi possível adicionar clínica, pois ela já existe", "Clinica existente",JOptionPane.INFORMATION_MESSAGE);
 					else
-					{
 						Clinicas.incluir(new Clinica(Integer.parseInt(txtCod.getText()), txtNome.getText(), Integer.parseInt(txtCEP.getText()), Integer.parseInt(txtNumero.getText()), txtComplemento.getText()));
-						limparCampos();
-					}
+						
 						
 				}
 				catch(Exception erro)
@@ -230,18 +245,20 @@ public class CRUD extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					if(txtCod.getText().equals(""))
-						throw new Exception("Valores inválidos");
+						JOptionPane.showMessageDialog(null, "Insira o código da clínica!", "Dados incompletos",JOptionPane.INFORMATION_MESSAGE);
 					if(!Clinicas.cadastrado(Integer.parseInt(txtCod.getText())))
 						JOptionPane.showMessageDialog(null, "Não foi possível encontrar encontrar clínica", "Clínica não existente", JOptionPane.WARNING_MESSAGE);
 					else
 					{ 
 						 Clinica cli = Clinicas.getClinica(Integer.parseInt(txtCod.getText()));
-						 limparCampos();
+						 btnLimparCampos.doClick();
+						
 						 txtCod.setText(cli.getCodClinica() + "");
 						 txtCEP.setText(cli.getCEP() + "");
 						 txtComplemento.setText(cli.getComplemento());
 						 txtNome.setText(cli.getNome());
 						 txtNumero.setText(cli.getNumero() + "");
+						 exibirEndereco();
 					}
 						
 					
@@ -260,14 +277,13 @@ public class CRUD extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					if(txtCod.getText().equals("") || txtNome.getText().equals("") || txtNumero.getText().equals("")||txtCEP.getText().equals(""))
-						throw new Exception("Valores inválidos");
-					if(!Clinicas.cadastrado(Integer.parseInt(txtCod.getText())))
+						JOptionPane.showMessageDialog(null, "Insira todos os dados corretamente", "Dados incompletos",JOptionPane.INFORMATION_MESSAGE);
+					else if(!Clinicas.cadastrado(Integer.parseInt(txtCod.getText())))
 						JOptionPane.showMessageDialog(null, "Não foi possível atualizar clínica, pois ela não existe", "Clinica não existente",JOptionPane.INFORMATION_MESSAGE);
 					else
-					{
 						Clinicas.alterar(new Clinica(Integer.parseInt(txtCod.getText()), txtNome.getText(), Integer.parseInt(txtCEP.getText()), Integer.parseInt(txtNumero.getText()), txtComplemento.getText()));
-						limparCampos();
-					}
+				
+					
 						
 				}
 				catch(Exception erro)
@@ -283,14 +299,16 @@ public class CRUD extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					if(txtCod.getText().equals(""))
-						throw new Exception("Campo de código vazio");
+						JOptionPane.showMessageDialog(null, "Insira o código da clínica!", "Dados incompletos",JOptionPane.INFORMATION_MESSAGE);
 					if(!Clinicas.cadastrado(Integer.parseInt(txtCod.getText())))
 							JOptionPane.showMessageDialog(null, "Não foi possível excluir a clínica, pois ela não existe", "Clinica não existente",JOptionPane.INFORMATION_MESSAGE);
 					else
 					{
 						Clinicas.excluir(Integer.parseInt(txtCod.getText()));
-						limparCampos();
+						btnLimparCampos.doClick();
 					}
+						
+					
 						
 				} 
 				catch (Exception err) {
@@ -299,17 +317,15 @@ public class CRUD extends JFrame {
 			}
 		});
 		panel.add(btnExcluir);
+		
+		
 	}
 	
-	private void limparCampos()
+	private void exibirEndereco()
 	{
-		txtCod.setText("");
-		txtNumero.setText("");
-		txtEndereco.setText("");
-		txtNome.setText("");
-		txtCod.setText("");
-		txtCEP.setText("");
-		txtComplemento.setText("");
+		Logradouro logradouro = (Logradouro)ClienteWS.getObjeto(Logradouro.class, "http://api.postmon.com.br/v1/cep/" + txtCEP.getText());
+		txtEndereco.setText(logradouro.getLogradouro() + ", " + logradouro.getBairro() + " - " + logradouro.getCidade() + ", " + logradouro.getEstado());
 	}
+	
 
 }
