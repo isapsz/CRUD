@@ -4,5 +4,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="P:/Informatica/Materiais Didaticos/Matutino/2o Semestre/Tecnicas de Programacao II/2018-10-11/bd2.0/sqljdbc42.jar"/>
 	<classpathentry kind="lib" path="P:/Informatica/Materiais Didaticos/Matutino/3o Semestre/Arquitetura Orientada a Serviços/2019-03-12/jackson-all-1.9.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/u18194/Documents/GitHub/CRUD/TrabalhoCRUD/api/jackson-all-1.9.0.jar"/>
+	<classpathentry kind="lib" path="miglayout15-swing.jar" sourcepath="miglayout-src.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

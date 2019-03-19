@@ -22,10 +22,20 @@ import java.awt.Insets;
 import javax.swing.JTextPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.io.IOException;
 
 public class CRUD extends JFrame {
 
 	private JPanel contentPane;
+	private JTextPane txtCod;
+	private JTextPane txtNome;
+	private JTextPane txtCEP;
+	private JTextPane txtNumero;
+	private JTextPane txtComplemento;
+	
+	private JTextPane txtEndereco;
 
 	/**
 	 * Launch the application.
@@ -42,13 +52,14 @@ public class CRUD extends JFrame {
 			}
 		});
 	}
+	
 
 	/**
 	 * Create the frame.
 	 */
 	public CRUD() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 510, 308);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -72,10 +83,10 @@ public class CRUD extends JFrame {
 		panel_1.setBackground(Color.DARK_GRAY);
 		contentPane.add(panel_1, BorderLayout.CENTER);
 		GridBagLayout gbl_panel_1 = new GridBagLayout();
-		gbl_panel_1.columnWidths = new int[]{0, 0, 0};
-		gbl_panel_1.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
+		gbl_panel_1.columnWidths = new int[]{69, 350, 0};
+		gbl_panel_1.rowHeights = new int[]{32, 32, 32, 32, 32, 0, 0};
 		gbl_panel_1.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gbl_panel_1.rowWeights = new double[]{1.0, 1.0, 1.0, 1.0, 1.0, Double.MIN_VALUE};
+		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		panel_1.setLayout(gbl_panel_1);
 		
 		JLabel label_1 = new JLabel("C\u00F3digo:");
@@ -86,7 +97,7 @@ public class CRUD extends JFrame {
 		gbc_label_1.gridy = 0;
 		panel_1.add(label_1, gbc_label_1);
 		
-		JTextPane txtCod = new JTextPane();
+		txtCod = new JTextPane();
 		GridBagConstraints gbc_txtCod = new GridBagConstraints();
 		gbc_txtCod.fill = GridBagConstraints.BOTH;
 		gbc_txtCod.insets = new Insets(0, 0, 5, 0);
@@ -102,7 +113,7 @@ public class CRUD extends JFrame {
 		gbc_label_2.gridy = 1;
 		panel_1.add(label_2, gbc_label_2);
 		
-		JTextPane txtNome = new JTextPane();
+		txtNome = new JTextPane();
 		GridBagConstraints gbc_txtNome = new GridBagConstraints();
 		gbc_txtNome.fill = GridBagConstraints.BOTH;
 		gbc_txtNome.insets = new Insets(0, 0, 5, 0);
@@ -118,7 +129,23 @@ public class CRUD extends JFrame {
 		gbc_label_3.gridy = 2;
 		panel_1.add(label_3, gbc_label_3);
 		
-		JTextPane txtCEP = new JTextPane();
+		txtCEP = new JTextPane();
+		txtCEP.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0)  {
+				try
+				{
+					Logradouro logradouro = (Logradouro)ClienteWS.getObjeto(Logradouro.class, "http://api.postmon.com.br/v1/cep/" + txtCEP.getText());
+					txtEndereco.setText(logradouro.getLogradouro() + ", " + logradouro.getBairro() + " - " + logradouro.getCidade() + ", " + logradouro.getEstado());
+				}
+				catch(Exception erro)
+				{
+					JOptionPane.showMessageDialog(null, "CEP inválido!", "ERRO",JOptionPane.ERROR_MESSAGE);
+					txtCEP.setText("");
+					txtCEP.requestFocus();
+				}
+			}
+		});
 		GridBagConstraints gbc_txtCEP = new GridBagConstraints();
 		gbc_txtCEP.fill = GridBagConstraints.BOTH;
 		gbc_txtCEP.insets = new Insets(0, 0, 5, 0);
@@ -134,7 +161,7 @@ public class CRUD extends JFrame {
 		gbc_label_4.gridy = 3;
 		panel_1.add(label_4, gbc_label_4);
 		
-		JTextPane txtNumero = new JTextPane();
+		txtNumero = new JTextPane();
 		GridBagConstraints gbc_txtNumero = new GridBagConstraints();
 		gbc_txtNumero.fill = GridBagConstraints.BOTH;
 		gbc_txtNumero.insets = new Insets(0, 0, 5, 0);
@@ -145,17 +172,35 @@ public class CRUD extends JFrame {
 		JLabel label_5 = new JLabel("Complemento:");
 		label_5.setForeground(Color.WHITE);
 		GridBagConstraints gbc_label_5 = new GridBagConstraints();
-		gbc_label_5.insets = new Insets(0, 0, 0, 5);
+		gbc_label_5.insets = new Insets(0, 0, 5, 5);
 		gbc_label_5.gridx = 0;
 		gbc_label_5.gridy = 4;
 		panel_1.add(label_5, gbc_label_5);
 		
-		JTextPane txtComplemento = new JTextPane();
+		txtComplemento = new JTextPane();
 		GridBagConstraints gbc_txtComplemento = new GridBagConstraints();
+		gbc_txtComplemento.insets = new Insets(0, 0, 5, 0);
 		gbc_txtComplemento.fill = GridBagConstraints.BOTH;
 		gbc_txtComplemento.gridx = 1;
 		gbc_txtComplemento.gridy = 4;
 		panel_1.add(txtComplemento, gbc_txtComplemento);
+		
+		JLabel lblNewLabel = new JLabel("Endere\u00E7o:");
+		lblNewLabel.setForeground(Color.WHITE);
+		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
+		gbc_lblNewLabel.insets = new Insets(0, 0, 0, 5);
+		gbc_lblNewLabel.gridx = 0;
+		gbc_lblNewLabel.gridy = 5;
+		panel_1.add(lblNewLabel, gbc_lblNewLabel);
+		
+		txtEndereco = new JTextPane();
+		txtEndereco.setBackground(Color.LIGHT_GRAY);
+		txtEndereco.setEditable(false);
+		GridBagConstraints gbc_txtEndereco = new GridBagConstraints();
+		gbc_txtEndereco.fill = GridBagConstraints.BOTH;
+		gbc_txtEndereco.gridx = 1;
+		gbc_txtEndereco.gridy = 5;
+		panel_1.add(txtEndereco, gbc_txtEndereco);
 		
 		JButton btnInserir = new JButton("Inserir");
 		btnInserir.addActionListener(new ActionListener() {
@@ -166,7 +211,11 @@ public class CRUD extends JFrame {
 					if(Clinicas.cadastrado(Integer.parseInt(txtCod.getText())))
 						JOptionPane.showMessageDialog(null, "Não foi possível adicionar clínica, pois ela já existe", "Clinica existente",JOptionPane.INFORMATION_MESSAGE);
 					else
+					{
 						Clinicas.incluir(new Clinica(Integer.parseInt(txtCod.getText()), txtNome.getText(), Integer.parseInt(txtCEP.getText()), Integer.parseInt(txtNumero.getText()), txtComplemento.getText()));
+						limparCampos();
+					}
+						
 				}
 				catch(Exception erro)
 				{
@@ -185,8 +234,10 @@ public class CRUD extends JFrame {
 					if(!Clinicas.cadastrado(Integer.parseInt(txtCod.getText())))
 						JOptionPane.showMessageDialog(null, "Não foi possível encontrar encontrar clínica", "Clínica não existente", JOptionPane.WARNING_MESSAGE);
 					else
-					{
+					{ 
 						 Clinica cli = Clinicas.getClinica(Integer.parseInt(txtCod.getText()));
+						 limparCampos();
+						 txtCod.setText(cli.getCodClinica() + "");
 						 txtCEP.setText(cli.getCEP() + "");
 						 txtComplemento.setText(cli.getComplemento());
 						 txtNome.setText(cli.getNome());
@@ -213,7 +264,11 @@ public class CRUD extends JFrame {
 					if(!Clinicas.cadastrado(Integer.parseInt(txtCod.getText())))
 						JOptionPane.showMessageDialog(null, "Não foi possível atualizar clínica, pois ela não existe", "Clinica não existente",JOptionPane.INFORMATION_MESSAGE);
 					else
+					{
 						Clinicas.alterar(new Clinica(Integer.parseInt(txtCod.getText()), txtNome.getText(), Integer.parseInt(txtCEP.getText()), Integer.parseInt(txtNumero.getText()), txtComplemento.getText()));
+						limparCampos();
+					}
+						
 				}
 				catch(Exception erro)
 				{
@@ -232,7 +287,11 @@ public class CRUD extends JFrame {
 					if(!Clinicas.cadastrado(Integer.parseInt(txtCod.getText())))
 							JOptionPane.showMessageDialog(null, "Não foi possível excluir a clínica, pois ela não existe", "Clinica não existente",JOptionPane.INFORMATION_MESSAGE);
 					else
+					{
 						Clinicas.excluir(Integer.parseInt(txtCod.getText()));
+						limparCampos();
+					}
+						
 				} 
 				catch (Exception err) {
 					err.getMessage();
@@ -240,6 +299,17 @@ public class CRUD extends JFrame {
 			}
 		});
 		panel.add(btnExcluir);
+	}
+	
+	private void limparCampos()
+	{
+		txtCod.setText("");
+		txtNumero.setText("");
+		txtEndereco.setText("");
+		txtNome.setText("");
+		txtCod.setText("");
+		txtCEP.setText("");
+		txtComplemento.setText("");
 	}
 
 }
