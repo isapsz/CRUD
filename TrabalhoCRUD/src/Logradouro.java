@@ -7,24 +7,19 @@ public class Logradouro
     {
         return this.logradouro;
     }
-    public void setLogradouro (String logradouro) throws Exception
+    public void setLogradouro (String logradouro)
     {
-        if (logradouro==null || logradouro.length()==0)
-            throw new Exception ("Logradouro ausente");
-
         this.logradouro = logradouro;
     }
 
     private String bairro;
+
     public  String getBairro ()
     {
         return this.bairro;
     }
-    public void setBairro (String bairro) throws Exception
+    public void setBairro (String bairro)
     {
-        if (bairro==null || bairro.length()==0)
-            throw new Exception ("Bairro ausente");
-
         this.bairro = bairro;
     }
 
@@ -126,8 +121,7 @@ public class Logradouro
 
     public String toString ()
     {
-        return "Logradouro: "+
-               this.logradouro+
+        return ((this.logradouro == null)? "" : "\nLogradouro:" + this.logradouro)"+
                "\nCidade....: "+
                this.cidade+
                " / "+
